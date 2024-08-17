@@ -5,10 +5,18 @@ import { PostgresHelper } from "./src/db/postgres/helper.js";
 
 const app = express();
 
-app.get("/", async (req, res) => {
+app.use(express.json());
+
+app.get("/api/users", async (req, res) => {
     const result = await PostgresHelper.query("SELECT * FROM users;");
 
     res.send(JSON.stringify(result));
 });
 
-app.listen(3000, () => console.log("Started DB"));
+app.post("/api/users", async (req, res) => {
+    console.log(req.body);
+    console.log(req.headers);
+    res.status(200).send("User Created");
+});
+
+app.listen(process.env.PORT, () => console.log("Started DB"));
