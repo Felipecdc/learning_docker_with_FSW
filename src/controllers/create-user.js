@@ -3,9 +3,9 @@ import { badRequest, created, serverError } from "./helpers.js";
 import validator from "validator";
 
 export class CreateUserController {
-    async execute(httpsRequest) {
+    async execute(httpRequest) {
         try {
-            const params = httpsRequest.body;
+            const params = httpRequest.body;
 
             const requiredFields = [
                 "first_name",
