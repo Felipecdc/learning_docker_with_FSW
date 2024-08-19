@@ -1,3 +1,4 @@
+import { EmailALreadyInUseError } from "../errors/user.js";
 import { CreateUserUseCase } from "../use-cases/create-user.js";
 import { badRequest, created, serverError } from "./helpers.js";
 import validator from "validator";
@@ -42,6 +43,9 @@ export class CreateUserController {
 
             return created(createdUser);
         } catch (error) {
+            if (error instanceof EmailALreadyInUseError) {
+                return badRequest({ message: error.message });
+            }
             console.log(error);
             return serverError();
         }
