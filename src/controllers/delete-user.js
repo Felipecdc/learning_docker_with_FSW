@@ -4,12 +4,13 @@ import {
     invalidIdResponse,
     serverError,
     ok,
+    userNotFoundResponse,
 } from "./helpers/index.js";
 
 export class DeleteUserController {
     async execute(httpRequest) {
         try {
-            const userId = httpRequest.params.id;
+            const userId = httpRequest.params.userId;
 
             const idIsValid = checkIfIdIsValid(userId);
 
@@ -20,6 +21,10 @@ export class DeleteUserController {
             const deleteUserUseCase = new DeleteUserUseCase();
 
             const deleteUser = await deleteUserUseCase.execute(userId);
+
+            if (!deleteUser) {
+                return userNotFoundResponse();
+            }
 
             return ok(deleteUser);
         } catch (error) {
