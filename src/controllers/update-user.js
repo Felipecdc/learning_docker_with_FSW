@@ -1,5 +1,5 @@
 import { EmailALreadyInUseError } from "../errors/user.js";
-import { UpdateUserUseCase } from "../use-cases/update-user.js";
+import { UpdateUserUseCase } from "../use-cases/index.js";
 import {
     checkIfEmailIsValid,
     checkIfIdIsValid,
