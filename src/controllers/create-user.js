@@ -21,17 +21,17 @@ export class CreateUserController {
                 }
             }
 
-            const passwordIsValid = params.password.length < 6;
+            const passwordIsNotValid = params.password.length < 6;
 
-            if (passwordIsValid) {
+            if (passwordIsNotValid) {
                 return badRequest({
                     message: "Password must be at least 6 characters.",
                 });
             }
 
-            const emailIsValid = validator.isEmail(params.email);
+            const emailIsNotValid = validator.isEmail(params.email);
 
-            if (!emailIsValid) {
+            if (!emailIsNotValid) {
                 return badRequest({
                     message: "Invalid e-mail, Please provide a valid one.",
                 });
