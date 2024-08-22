@@ -11,6 +11,9 @@ import {
 } from "./helpers/index.js";
 
 export class CreateUserController {
+    constructor(createUserUseCase) {
+        this.createUserUseCase = createUserUseCase;
+    }
     async execute(httpRequest) {
         try {
             const params = httpRequest.body;
@@ -40,9 +43,7 @@ export class CreateUserController {
                 return emailIsAlreadyInUserResponse();
             }
 
-            const createUserUseCase = new CreateUserUseCase();
-
-            const createdUser = await createUserUseCase.execut(params);
+            const createdUser = await this.createUserUseCase.execut(params);
 
             return created(createdUser);
         } catch (error) {
