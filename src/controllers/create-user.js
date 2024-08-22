@@ -1,5 +1,4 @@
 import { EmailALreadyInUseError } from "../errors/user.js";
-import { CreateUserUseCase } from "../use-cases/index.js";
 import {
     checkIfEmailIsValid,
     checkIfPasswordIsValid,
