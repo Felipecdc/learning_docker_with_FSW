@@ -3,7 +3,7 @@ import { badRequest, notFound } from "./http.js";
 
 export const invalidPasswordResponse = () => {
     return badRequest({
-        message: "Passworod must be at least 6 characters.",
+        message: "Password must be at least 6 characters.",
     });
 };
 
