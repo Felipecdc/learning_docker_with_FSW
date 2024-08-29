@@ -3,6 +3,7 @@ import { badRequest, created, serverError } from "../helpers/http.js";
 import {
     checkIfIdIsValid,
     invalidIdResponse,
+    requiredFieldIsMissing,
     validateRequiredFileds,
 } from "../helpers/index.js";
 
@@ -26,9 +27,7 @@ export class CreateTransactionController {
                 validateRequiredFileds(params, requiredFields);
 
             if (!someRequiredFieldWereProvided) {
-                return badRequest({
-                    message: `The field ${missingField} is required. `,
-                });
+                return requiredFieldIsMissing(missingField);
             }
 
             const userIdIsValid = checkIfIdIsValid(params.user_id);
@@ -38,12 +37,6 @@ export class CreateTransactionController {
             }
 
             const amount = params.amount;
-
-            if (amount <= 0) {
-                return badRequest({
-                    message: "The amount must be greater than 0.",
-                });
-            }
 
             const amountIsValid = validator.isCurrency(amount.toString(), {
                 digits_after_decimal: [2],
