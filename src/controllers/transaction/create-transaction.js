@@ -1,6 +1,10 @@
 import validator from "validator";
 import { badRequest, created, serverError } from "../helpers/http.js";
-import { checkIfIdIsValid, invalidIdResponse } from "../helpers/index.js";
+import {
+    checkIfIdIsValid,
+    invalidIdResponse,
+    validateRequiredFileds,
+} from "../helpers/index.js";
 
 export class CreateTransactionController {
     constructor(createTransactionUseCase) {
@@ -18,13 +22,13 @@ export class CreateTransactionController {
                 "type",
             ];
 
-            for (const field of requiredFields) {
-                if (
-                    !params[field] ||
-                    params[field].toString().trim().length === 0
-                ) {
-                    return badRequest({ message: `Missing params: ${field}` });
-                }
+            const { ok: someRequiredFieldWereProvided, missingField } =
+                validateRequiredFileds(params, requiredFields);
+
+            if (!someRequiredFieldWereProvided) {
+                return badRequest({
+                    message: `The field ${missingField} is required. `,
+                });
             }
 
             const userIdIsValid = checkIfIdIsValid(params.user_id);
