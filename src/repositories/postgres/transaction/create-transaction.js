@@ -1,11 +1,11 @@
 import { PostgresHelper } from "../../../db/postgres/helper.js";
 
-export class PostgresCreateTransactionRepositoy {
+export class PostgresCreateTransactionRepository {
     async execute(createTransactionParams) {
-        const createdTransaction = await PostgresHelper.query(
+        const createTransaction = await PostgresHelper.query(
             `
             INSERT INTO transactions (id, user_id, name, date, amount, type) 
-            VALUES ($1, $2 , $3 ,$4 ,$5 ,$6) 
+            VALUES ($1, $2, $3, $4, $5, $6) 
             RETURNING *
             `,
             [
@@ -18,6 +18,6 @@ export class PostgresCreateTransactionRepositoy {
             ]
         );
 
-        return createdTransaction[0];
+        return createTransaction[0];
     }
 }

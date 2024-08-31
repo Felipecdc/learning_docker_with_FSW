@@ -1,14 +1,15 @@
-import { created, serverError } from "../helpers/http.js";
+import validator from "validator";
+import { UserNotFoundError } from "../../errors/user.js";
 import {
+    badRequest,
     checkIfIdIsValid,
-    checkIfTypeIsValid,
-    invalidAmountResponse,
+    created,
     invalidIdResponse,
-    invalidTypeResponse,
     requiredFieldIsMissing,
+    serverError,
+    userNotFoundResponse,
     validateRequiredFileds,
 } from "../helpers/index.js";
-import { checkIfAmountIsValid } from "../helpers/index.js";
 
 export class CreateTransactionController {
     constructor(createTransactionUseCase) {
@@ -19,8 +20,8 @@ export class CreateTransactionController {
             const params = httpRequest.body;
 
             const requiredFields = [
-                "user_id",
                 "name",
+                "user_id",
                 "date",
                 "amount",
                 "type",
@@ -39,18 +40,31 @@ export class CreateTransactionController {
                 return invalidIdResponse();
             }
 
-            const amountIsValid = checkIfAmountIsValid(params.amount);
+            const amountIsValid = validator.isCurrency(
+                params.amount.toString(),
+                {
+                    digits_after_decimal: [2],
+                    allow_negatives: false,
+                    decimal_separator: ".",
+                }
+            );
 
             if (!amountIsValid) {
-                return invalidAmountResponse();
+                return badRequest({
+                    message: "The amount must be a valid currency.",
+                });
             }
 
             const type = params.type.trim().toUpperCase();
 
-            const typeIsValid = checkIfTypeIsValid(type);
+            const typeIsValid = ["EARNING", "EXPENSE", "INVESTMENT"].includes(
+                type
+            );
 
             if (!typeIsValid) {
-                return invalidTypeResponse();
+                return badRequest({
+                    message: "The type must be EARNING, EXPENSE or INVESTMENT.",
+                });
             }
 
             const transaction = await this.createTransactionUseCase.execute({
@@ -61,6 +75,9 @@ export class CreateTransactionController {
             return created(transaction);
         } catch (error) {
             console.log(error);
+            if (error instanceof UserNotFoundError) {
+                return userNotFoundResponse();
+            }
             return serverError();
         }
     }
