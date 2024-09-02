@@ -9,7 +9,9 @@ import {
 } from "../helpers/index.js";
 
 export class GetTransactionsByUserIdController {
-    constructor(getTransactionsByUserIdUseCase, getUserByIdResponse) {}
+    constructor(getTransactionsByUserIdUseCase) {
+        this.getTransactionsByUserIdUseCase = getTransactionsByUserIdUseCase;
+    }
     async execute(httpRequest) {
         try {
             const userId = httpRequest.query.userId;
@@ -20,7 +22,7 @@ export class GetTransactionsByUserIdController {
 
             const userIdIsValid = checkIfIdIsValid(userId);
 
-            if (userIdIsValid) {
+            if (!userIdIsValid) {
                 return invalidIdResponse();
             }
 
