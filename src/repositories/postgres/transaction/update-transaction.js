@@ -15,7 +15,7 @@ export class PostgresUpdateTransactionRepository {
         const updateQuery = `
         UPDATE transactions 
         SET ${updateFields.join(", ")} 
-        WHERE id = $${updateValues.length}
+        WHERE id = $${updateValues.length} 
         RETURNING *
         `;
 
